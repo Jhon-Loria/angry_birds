@@ -314,12 +314,14 @@ class ShopManager {
 // Widget de la tienda
 class ShopScreen extends StatefulWidget {
   final ShopManager shopManager;
-  final Function(LevelType) onStartGame;
+  final Function(LevelType)? onStartGame;
+  final VoidCallback? onReturnToMenu;
 
   const ShopScreen({
     Key? key,
     required this.shopManager,
-    required this.onStartGame,
+    this.onStartGame,
+    this.onReturnToMenu,
   }) : super(key: key);
 
   @override
@@ -526,108 +528,53 @@ class _ShopScreenState extends State<ShopScreen> {
                 
                 SizedBox(height: 16),
                 
-                // Botones de iniciar juego
-                Row(
-                  children: [
-                    Expanded(
-                      child: SizedBox(
-                        height: 60,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            widget.onStartGame(LevelType.normal);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            side: BorderSide(
-                              color: Color(0xFF00FF00), // Verde neón
-                              width: 3,
+                // Botón para volver al menú
+                if (widget.onReturnToMenu != null)
+                  SizedBox(
+                    width: double.infinity,
+                    height: 60,
+                    child: ElevatedButton(
+                      onPressed: widget.onReturnToMenu,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        side: BorderSide(
+                          color: Color(0xFF00FFFF), // Azul neón
+                          width: 3,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0xFF00FFFF).withOpacity(0.6),
+                              blurRadius: 15,
+                              spreadRadius: 2,
                             ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            elevation: 0,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xFF00FF00).withOpacity(0.6),
-                                  blurRadius: 15,
-                                  spreadRadius: 2,
-                                ),
-                              ],
-                            ),
-                            child: Text(
-                              'NORMAL',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF00FF00), // Verde neón
-                                letterSpacing: 2,
-                                shadows: [
-                                  Shadow(
-                                    blurRadius: 10,
-                                    color: Color(0xFF00FF00),
-                                    offset: Offset(0, 0),
-                                  ),
-                                ],
+                          ],
+                        ),
+                        child: Text(
+                          'VOLVER AL MENÚ',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF00FFFF), // Azul neón
+                            letterSpacing: 2,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 10,
+                                color: Color(0xFF00FFFF),
+                                offset: Offset(0, 0),
                               ),
-                            ),
+                            ],
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: SizedBox(
-                        height: 60,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            widget.onStartGame(LevelType.bigBoss);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            side: BorderSide(
-                              color: Color(0xFFFF0080), // Rosa/Magenta neón
-                              width: 3,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            elevation: 0,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xFFFF0080).withOpacity(0.6),
-                                  blurRadius: 15,
-                                  spreadRadius: 2,
-                                ),
-                              ],
-                            ),
-                            child: Text(
-                              'JEFE FINAL',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFFFF0080), // Rosa/Magenta neón
-                                letterSpacing: 2,
-                                shadows: [
-                                  Shadow(
-                                    blurRadius: 10,
-                                    color: Color(0xFFFF0080),
-                                    offset: Offset(0, 0),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
               ],
             ),
           ),
@@ -1098,6 +1045,10 @@ class _PaymentDialogState extends State<PaymentDialog> {
       ),
       backgroundColor: Colors.transparent,
       child: Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.9,
+          maxWidth: 400,
+        ),
         padding: EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: Colors.black,
@@ -1360,19 +1311,21 @@ class _PaymentDialogState extends State<PaymentDialog> {
                   ],
                 ),
                 SizedBox(height: 24),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: _isProcessing ? null : widget.onPaymentCancel,
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: neonBlue, width: 2),
-                          backgroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(2),
+                Padding(
+                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: _isProcessing ? null : widget.onPaymentCancel,
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: neonBlue, width: 2),
+                            backgroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                            padding: EdgeInsets.symmetric(vertical: 16),
                           ),
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                        ),
                         child: Text(
                           'CANCELAR',
                           style: TextStyle(
@@ -1446,6 +1399,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                       ),
                     ),
                   ],
+                ),
                 ),
               ],
             ),

@@ -148,7 +148,7 @@ class MyPhysicsGame extends Forge2DGame {
   FutureOr<void> onLoad() async {
     // Cargar imagen de fondo según el tipo de nivel
     final backgroundImagePath = levelType == LevelType.bigBoss 
-        ? 'baby.png' 
+        ? 'baby.jpg' 
         : 'colored_grass.png';
     final backgroundImage = await images.load(backgroundImagePath);
     final spriteSheets = await Future.wait([
@@ -509,7 +509,7 @@ class MyPhysicsGame extends Forge2DGame {
     
     // Recargar elementos del juego según el tipo de nivel
     final backgroundImagePath = levelType == LevelType.bigBoss 
-        ? 'baby.png' 
+        ? 'baby.jpg' 
         : 'colored_grass.png';
     final backgroundImage = await images.load(backgroundImagePath);
     await world.add(Background(sprite: Sprite(backgroundImage)));
