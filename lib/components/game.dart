@@ -130,7 +130,6 @@ class MyPhysicsGame extends Forge2DGame {
   late final TextComponent _scoreText;
   int _score = 0;
   bool _gameEnded = false;
-  bool _firstShot = true;
   bool _playerWon = false;
   Player? _currentPlayer;
 
@@ -321,7 +320,6 @@ class MyPhysicsGame extends Forge2DGame {
       onShot: () {
         _shotCounter++;
         _shotCounterText.text = 'Disparos: $_shotCounter/$_maxShots';
-        _firstShot = false;
         
         // Desactivar efectos del item después del tiro
         if (_nextShotHasSpeedBoost) {
@@ -481,7 +479,6 @@ class MyPhysicsGame extends Forge2DGame {
     _score = 0;
     _shotCounter = 0;
     _gameEnded = false;
-    _firstShot = true;
     _playerWon = false;
     enemiesFullyAdded = false;
     
